@@ -2,7 +2,7 @@
 from flask import Flask, jsonify
 from .config import Config
 from .models import Agency
-from .extensions import db, api
+from .extensions import db, api, cache
 import os
 import csv
 
@@ -18,6 +18,7 @@ def create_app(config_class=None):
     # Init extensions
     db.init_app(app)
     api.init_app(app)
+    cache.init_app(app)
 
     # Import blueprint here to avoid circular import
     from .routes.agencies import agencies_bp
