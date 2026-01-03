@@ -126,4 +126,43 @@ text
 
 I'll register it with: api.add_namespace(agencies_bp, path='/v1/agencies')
 
-Keep it clean and working with my CSV data!
+Keep it clean and working with my CSV data
+**prompt3:RNE verification**
+I have a Flask-RESTX API with POST /api/v1/agencies endpoint.
+
+CURRENT POST ENDPOINT:
+✅ RNE format validation (1170952L = 7 digits + 1 letter)
+✅ Trust score validation (0-100)
+✅ Creates agency if valid
+
+TASK: ADD REAL WEBSITE VERIFICATION
+
+1. Navigate to: https://www.registre-entreprises.tn/rne-public/#/recherche-pm
+2. Find "Identifiant Unique" input field 
+3. ENTER RNE number (ex: 1170952L)
+4. CLICK "Rechercher" button
+5. WAIT for results (3 seconds)
+6. CHECK if company found ("résultat trouvé" OR company name appears)
+7. RETURN True/False
+
+REQUIREMENTS:
+✅ Use Selenium (Chrome headless)
+✅ Error handling (no crashes)
+✅ 10 second timeout max
+✅ Print logs: "🔍 Searching 1170952L..." → "✅ VERIFIED" or "❌ NOT FOUND"
+✅ Fail safe: return False if website down
+
+INTEGRATE into existing verify_rne_online(self, rne) method in AgencyCreate class.
+
+ALSO ADD:
+✅ Cache results (redis/memory) - avoid hitting website 100x
+✅ Rate limiting (1 request/second max)
+✅ Fallback to format validation if website down
+
+OUTPUT ONLY:
+1. pip install commands
+2. Complete verify_rne_online method (50-80 lines)
+3. Chrome driver setup instructions
+4. Test POST JSON example
+
+Goal: POST {"tax_id": "1170952L"} → API searches Tunisian registry LIVE → ✅ or ❌
