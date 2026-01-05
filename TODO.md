@@ -1,12 +1,13 @@
-# TODO: Replace RNE Verification with AI Trust Engine
+# TODO: Integrate RNE Verification into TAX ID Validation
 
 ## Tasks
-- [x] Update CSV schema: Add `fake_flag` and `analysis_reason` columns to `data/tunisia_agencies_real_dataset.csv`
-- [x] Implement AI trust scoring logic in `AgencyCreate` class (rule-based on email, phone, company_name, governorate, tax_id)
-- [x] Modify `create_agency` method: Remove Playwright RNE verification, add trust scoring, fake_flag, analysis_reason
-- [x] Add rejection logic: Reject POST if trust_score < 30
-- [x] Add Premium Verified badge: Set flag if trust_score > 80
-- [x] Update response format: Include trust_score, fake_flag, analysis_reason, agency_id
-- [x] Remove unused imports: playwright, bs4, requests from `app/routes/agencies.py`
-- [x] Test POST endpoint with various inputs
-- [x] Verify CSV updates correctly
+- [x] Modify `calculate_trust_score` method in `agency_service.py` to include RNE verification as part of TAX ID validation
+- [x] Update `add_agency` method to use the integrated RNE verification and remove separate RNE check
+- [x] Test the POST endpoint to ensure RNE verification is integrated into trust score calculation
+
+## Details
+- Add `verify_rne` parameter to `calculate_trust_score` (default False)
+- In TAX ID validation section, perform RNE verification if `verify_rne=True` and adjust score
+- Return rne_status and rne_adjust from `calculate_trust_score`
+- Update `add_agency` to pass `verify_rne=True` and use returned RNE values
+- Remove duplicate RNE verification code in `add_agency`

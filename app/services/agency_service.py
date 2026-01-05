@@ -1,8 +1,10 @@
 import os
 import csv
 import re
+import shutil
 from datetime import datetime
 from flask import abort
+from app.services.rne_verification import verify_rne_sync
 
 class AgencyService:
     CSV_PATH = 'data/tunisia_agencies_real_dataset.csv'
@@ -45,7 +47,7 @@ class AgencyService:
         if not agencies:
             return
 
-        fieldnames = ['tax_id', 'company_name', 'official_name', 'governorate', 'email', 'phone', 'phone_valid', 'trust_score', 'fraud_risk', 'analysis', 'last_verified']
+        fieldnames = ['tax_id', 'company_name', 'official_name', 'governorate', 'email', 'phone', 'phone_valid', 'trust_score', 'fraud_risk', 'analysis', 'last_verified', 'rne_status', 'rne_adjust']
 
         with open(AgencyService.CSV_PATH, 'w', newline='', encoding='utf-8') as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
@@ -62,7 +64,9 @@ class AgencyService:
                     'trust_score': agency['trust_score'],
                     'fraud_risk': str(agency['fraud_risk']).lower(),
                     'analysis': agency['analysis'],
-                    'last_verified': agency['last_verified']
+                    'last_verified': agency['last_verified'],
+                    'rne_status': agency.get('rne_status', 'NOT_VERIFIED'),
+                    'rne_adjust': agency.get('rne_adjust', 0)
                 })
 
     @staticmethod
@@ -84,7 +88,7 @@ class AgencyService:
             return False, "Invalid prefix"
 
     @staticmethod
-    def calculate_trust_score(agency):
+    def calculate_trust_score(agency, verify_rne=False):
         """Calculate AI trust score based on input factors (0-100)"""
         score = 0
         reasons = []
@@ -95,16 +99,15 @@ class AgencyService:
         governorate = agency.get('governorate', '')
         tax_id = agency.get('tax_id', '')
 
+        rne_status = "NOT_VERIFIED"
+        rne_adjust = 0
+
         # Phone validation
         if phone:
-            valid, phone_type = AgencyService.validate_phone(phone)
+            valid, _ = AgencyService.validate_phone(phone)
             if valid:
-                if phone_type == "Mobile":
-                    score += 25
-                    reasons.append("Valid mobile phone (+25)")
-                else:
-                    score += 15
-                    reasons.append("Valid landline phone (+15)")
+                score += 25
+                reasons.append("Valid phone (+25)")
             else:
                 score -= 20
                 reasons.append("Invalid phone (-20)")
@@ -149,25 +152,47 @@ class AgencyService:
             digits = tax_id[:7]
             letter = tax_id[7] if len(tax_id) > 7 else ''
             if digits.isdigit() and (len(tax_id) == 7 or letter.isalpha()):
-                score += 10
-                reasons.append("Valid tax ID format (+10)")
+                score += 25
+                reasons.append("Valid tax ID format (+25)")
+
+                # RNE verification if enabled
+                if verify_rne:
+                    try:
+                        rne_result = verify_rne_sync(tax_id)
+                        if rne_result.get('verified', False):
+                            rne_adjust = 25
+                            rne_status = "RNE_VERIFIED"
+                            score += rne_adjust
+                            reasons.append("RNE verified (+25)")
+                        else:
+                            rne_adjust = -15
+                            rne_status = "RNE_NOT_FOUND_RISKY"
+                            score += rne_adjust
+                            reasons.append("RNE not found (-15)")
+                    except Exception as e:
+                        rne_status = "RNE_VERIFICATION_ERROR"
+                        reasons.append(f"RNE verification error: {str(e)}")
             else:
                 reasons.append("Invalid tax ID format")
         else:
             reasons.append("Invalid tax ID")
 
-        score = max(0, min(100, score))
+        score = min(100, score * 100 // 130)
         fraud_risk = score < 50
         analysis = "; ".join(reasons)
 
-        return score, fraud_risk, analysis
+        return score, fraud_risk, analysis, rne_status, rne_adjust
 
     @staticmethod
     def validate_rne_format(rne):
-        """Validate RNE format: 7 digits + 1 letter"""
+        """Validate RNE format: 7 digits + 1 letter (8 chars) or 8 digits + 1 letter (9 chars)"""
         if len(rne) == 8:
             digits = rne[:7]
             letter = rne[7]
+            return digits.isdigit() and letter.isalpha()
+        elif len(rne) == 9:
+            digits = rne[:8]
+            letter = rne[8]
             return digits.isdigit() and letter.isalpha()
         return False
 
@@ -179,7 +204,7 @@ class AgencyService:
 
     @staticmethod
     def add_agency(agency_data):
-        """Add new agency with trust scoring and duplicate check"""
+        """Add new agency with trust scoring, RNE validation, and duplicate check"""
         tax_id = agency_data.get('tax_id')
         if not tax_id:
             abort(400, "tax_id is required")
@@ -191,12 +216,15 @@ class AgencyService:
         if AgencyService.is_duplicate(tax_id):
             abort(409, "Duplicate tax_id: Agency already exists")
 
-        # Calculate trust score
-        trust_score, fraud_risk, analysis = AgencyService.calculate_trust_score(agency_data)
+        # Calculate trust score with RNE verification integrated
+        final_trust_score, fraud_risk, analysis, rne_status, rne_adjust = AgencyService.calculate_trust_score(agency_data, verify_rne=True)
 
-        # Reject if trust_score < 30
-        if trust_score < 30:
-            abort(400, f"Trust score too low ({trust_score}). Agency rejected. Analysis: {analysis}")
+        # Update fraud risk based on final score
+        final_fraud_risk = final_trust_score < 25
+
+        # Reject if final_trust_score < 25 (stricter threshold)
+        if final_trust_score < 25:
+            abort(400, f"Trust score too low ({final_trust_score}). Agency rejected. Analysis: {analysis}")
 
         # Load existing agencies
         agencies = AgencyService.load_csv()
@@ -213,22 +241,66 @@ class AgencyService:
             'email': agency_data.get('email', ''),
             'phone': agency_data.get('phone', ''),
             'phone_valid': phone_valid,
-            'trust_score': trust_score,
-            'fraud_risk': fraud_risk,
+            'trust_score': final_trust_score,
+            'fraud_risk': final_fraud_risk,
             'analysis': analysis,
-            'last_verified': datetime.utcnow().isoformat() + 'Z'
+            'last_verified': datetime.utcnow().isoformat() + 'Z',
+            'rne_status': rne_status,
+            'rne_adjust': rne_adjust
         }
+
+        # Backup CSV
+        shutil.copy(AgencyService.CSV_PATH, 'data/tunisia_agencies_real_dataset_backup.csv')
 
         # Append and save
         agencies.append(new_agency)
         AgencyService.save_csv(agencies)
 
         return {
+            'trust_score': final_trust_score,
+            'fraud_risk': final_fraud_risk,
+            'analysis': analysis,
+            'rne_status': rne_status,
+            'total': len(agencies),
+            'premium_verified': final_trust_score > 80
+        }
+
+    @staticmethod
+    def update_agency(tax_id, update_data):
+        """Update agency fields and re-score"""
+        agencies = AgencyService.load_csv()
+        agency = next((a for a in agencies if a['tax_id'] == tax_id), None)
+        if not agency:
+            abort(404, f"Agency with tax_id {tax_id} not found")
+
+        # Update fields
+        for key, value in update_data.items():
+            if key in agency:
+                agency[key] = value
+
+        # Re-validate phone
+        if 'phone' in update_data:
+            phone_valid, _ = AgencyService.validate_phone(update_data['phone'])
+            agency['phone_valid'] = phone_valid
+
+        # Re-calculate trust score
+        trust_score, fraud_risk, analysis = AgencyService.calculate_trust_score(agency)
+        agency['trust_score'] = trust_score
+        agency['fraud_risk'] = fraud_risk
+        agency['analysis'] = analysis
+        agency['last_verified'] = datetime.utcnow().isoformat() + 'Z'
+
+        # Backup CSV
+        shutil.copy(AgencyService.CSV_PATH, 'data/tunisia_agencies_real_dataset_backup.csv')
+
+        # Save
+        AgencyService.save_csv(agencies)
+
+        return {
+            'tax_id': tax_id,
             'trust_score': trust_score,
             'fraud_risk': fraud_risk,
-            'analysis': analysis,
-            'total': len(agencies),
-            'premium_verified': trust_score > 80
+            'analysis': analysis
         }
 
     @staticmethod

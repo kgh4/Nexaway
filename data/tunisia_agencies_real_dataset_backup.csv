@@ -40,8 +40,3 @@ tax_id,company_name,official_name,governorate,email,phone,phone_valid,trust_scor
 5173203A,Gabes Tours,Gabes Tours SARL,Gabes,reservations@gabes-tours.tn,+216 75 444 555,False,77,false,,,NOT_VERIFIED,0
 9598440F,Mahdia Voyages,Mahdia Voyages SARL,Mahdia,contact@mahdia-voyages.tn,+216 73 666 777,False,95,false,,,NOT_VERIFIED,0
 5984180Z,Beja Travel,Beja Travel SARL,Beja,info@beja-travel.tn,+216 78 888 999,False,87,false,,,NOT_VERIFIED,0
-01616343A,ABC Travel SARL,,Tunis,info@abc.tn,+21698234567,True,69,false,Valid phone (+25); Valid email domain (+20); Legitimate company name (+30); Valid Tunisian governorate (+15); Invalid tax ID format,2026-01-03T12:23:57.457010Z,NOT_VERIFIED,0
-12345678A,Test Agency SARL,,Tunis,test@test.tn,+21671234567,True,69,false,Valid phone (+25); Valid email domain (+20); Legitimate company name (+30); Valid Tunisian governorate (+15); Invalid tax ID format,2026-01-03T12:11:18.812457Z,NOT_VERIFIED,0
-02345678B,Elite Tours SARL,,Ariana,elite@tn.com,+21698234567,True,42,true,Valid phone (+25); Suspicious email domain (-15); Legitimate company name (+30); Valid Tunisian governorate (+15); Invalid tax ID format,2026-01-03T12:17:24.839410Z,NOT_VERIFIED,0
-09052852B,CARTHAGE TRAVELS SARL,,Tunis,contact@carthagetravels.com,+21671123456,True,27,true,Valid phone (+25); Suspicious email domain (-15); Legitimate company name (+30); Valid Tunisian governorate (+15); Invalid tax ID format,2026-01-03T13:01:29.153875Z,NOT_VERIFIED,0
-00002412B,ABC Travel SARL,,Tunis,info@abc.tn,+216 71 234 567,False,34,false,Invalid phone (-20); Valid email domain (+20); Legitimate company name (+30); Valid Tunisian governorate (+15); Invalid tax ID,2026-01-05T13:00:01.898436Z,NOT_VERIFIED,0
