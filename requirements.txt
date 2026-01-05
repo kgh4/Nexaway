@@ -1,0 +1,8 @@
+flask==2.3.3
+flask-sqlalchemy==2.5.1
+flask-restx==1.1.0
+pytest==7.4.0
+selenium==4.15.2
+webdriver-manager==4.0.1
+flask-caching==2.1.0
+playwright==1.40.0
