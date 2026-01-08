@@ -1,3 +1,2 @@
 offer_id,agency_tax_id,agency_name,type,title,price,currency,from_city,to_city,depart_date,return_date,seats_available,description,created_at
 O0001,002412B,GLOBAL LIGHTING SARL,flight,TUN-Paris Business Class,150.0,EUR,TUN,PAR,2026-02-14,2026-02-21,8,Direct Air France AF1781,2026-01-05T20:12:01.000214
-O0002,02345678B,Elite Tours SARL,flight,TUN-Paris Business Class,450,EUR,TUN,PAR,2026-02-14,2026-02-21,8,Direct Air France AF1781,2026-01-05T20:19:44.074624

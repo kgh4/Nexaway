@@ -134,18 +134,7 @@ class AgencyService:
         fraud_risk = score < 40
         return score, fraud_risk, "; ".join(reasons)
 
-    @staticmethod
-    def validate_rne_format(rne):
-        """Validate RNE format: 7 digits + 1 letter (8 chars) or 8 digits + 1 letter (9 chars)"""
-        if len(rne) == 8:
-            digits = rne[:7]
-            letter = rne[7]
-            return digits.isdigit() and letter.isalpha()
-        elif len(rne) == 9:
-            digits = rne[:8]
-            letter = rne[8]
-            return digits.isdigit() and letter.isalpha()
-        return False
+
 
     @staticmethod
     def is_duplicate(tax_id):
@@ -273,3 +262,9 @@ class AgencyService:
         """Get all agencies sorted by trust_score DESC"""
         agencies = AgencyService.load_csv()
         return sorted(agencies, key=lambda x: x['trust_score'], reverse=True)
+
+    @staticmethod
+    def validate_rne_format(rne):
+        """Validate RNE format - must be 8 digits"""
+        rne = rne.replace(" ", "").strip()
+        return len(rne) == 8 and rne.isdigit()

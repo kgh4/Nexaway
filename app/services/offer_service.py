@@ -1,132 +1,175 @@
-import os
-import csv
-from datetime import datetime
+import uuid
+from datetime import datetime, date
 from flask import abort
+from app.extensions import db
+from app.models import Offer
 from app.services.agency_service import AgencyService
 
 class OfferService:
-    CSV_PATH = 'data/offers.csv'
 
     @staticmethod
-    def load_csv():
-        """Load all offers from CSV as List[dict]"""
-        if not os.path.exists(OfferService.CSV_PATH):
-            return []
+    def get_offers(filters=None, page=1, limit=10, sort='price_asc'):
+        """Get offers with filtering, pagination, and sorting"""
+        query = Offer.query
 
-        offers = []
-        with open(OfferService.CSV_PATH, 'r', encoding='utf-8') as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                offers.append({
-                    'offer_id': row.get('offer_id', ''),
-                    'agency_tax_id': row.get('agency_tax_id', ''),
-                    'agency_name': row.get('agency_name', ''),
-                    'type': row.get('type', ''),
-                    'title': row.get('title', ''),
-                    'price': float(row.get('price', 0)),
-                    'currency': row.get('currency', 'DT'),
-                    'from_city': row.get('from_city', ''),
-                    'to_city': row.get('to_city', ''),
-                    'depart_date': row.get('depart_date', ''),
-                    'return_date': row.get('return_date', ''),
-                    'seats_available': int(row.get('seats_available', 0)) if row.get('seats_available') else None,
-                    'description': row.get('description', ''),
-                    'created_at': row.get('created_at', '')
-                })
-        return offers
+        # Apply filters
+        if filters:
+            if 'type' in filters and filters['type']:
+                query = query.filter(Offer.type == filters['type'])
+            if 'domestic' in filters and filters['domestic'] is not None:
+                domestic = filters['domestic'].lower() == 'true'
+                query = query.filter(Offer.domestic == domestic)
+            if 'segment' in filters and filters['segment']:
+                query = query.filter(Offer.segment == filters['segment'])
+            if 'pilgrimage_type' in filters and filters['pilgrimage_type']:
+                query = query.filter(Offer.pilgrimage_type == filters['pilgrimage_type'])
+            if 'from_city' in filters and filters['from_city']:
+                query = query.filter(Offer.from_city == filters['from_city'])
+            if 'to_city' in filters and filters['to_city']:
+                query = query.filter(Offer.to_city == filters['to_city'])
+            if 'min_price' in filters and filters['min_price']:
+                query = query.filter(Offer.price >= float(filters['min_price']))
 
-    @staticmethod
-    def save_csv(offers):
-        """Write all offers to CSV"""
-        if not offers:
-            return
+        # Apply sorting
+        if sort == 'price_desc':
+            query = query.order_by(Offer.price.desc())
+        elif sort == 'date_from':
+            query = query.order_by(Offer.date_from)
+        else:
+            query = query.order_by(Offer.price.asc())
 
-        fieldnames = ['offer_id', 'agency_tax_id', 'agency_name', 'type', 'title', 'price', 'currency', 'from_city', 'to_city', 'depart_date', 'return_date', 'seats_available', 'description', 'created_at']
+        # Apply pagination
+        offers = query.paginate(page=int(page), per_page=int(limit), error_out=False)
 
-        with open(OfferService.CSV_PATH, 'w', newline='', encoding='utf-8') as f:
-            writer = csv.DictWriter(f, fieldnames=fieldnames)
-            writer.writeheader()
-            for offer in offers:
-                writer.writerow({
-                    'offer_id': offer['offer_id'],
-                    'agency_tax_id': offer['agency_tax_id'],
-                    'agency_name': offer.get('agency_name', ''),
-                    'type': offer['type'],
-                    'title': offer['title'],
-                    'price': offer['price'],
-                    'currency': offer['currency'],
-                    'from_city': offer.get('from_city', ''),
-                    'to_city': offer.get('to_city', ''),
-                    'depart_date': offer.get('depart_date', ''),
-                    'return_date': offer.get('return_date', ''),
-                    'seats_available': offer.get('seats_available'),
-                    'description': offer.get('description', ''),
-                    'created_at': offer.get('created_at', datetime.utcnow().isoformat())
-                })
+        return {
+            'offers': [offer.to_dict() for offer in offers.items],
+            'total': offers.total,
+            'page': offers.page,
+            'pages': offers.pages,
+            'per_page': offers.per_page
+        }
 
     @staticmethod
     def add_offer(offer_data):
         # Validate agency
-        agency = AgencyService.get_agency_by_tax_id(offer_data['agency_tax_id'])
+        agency = AgencyService.get_agency_by_tax_id(offer_data['agency_id'])
         if not agency or agency['trust_score'] < 40:
             abort(400, f"Agency invalid (score: {agency.get('trust_score',0)})")
 
-        offers = OfferService.load_csv()
-        offer_id = f"O{len(offers)+1:04d}"
+        # Generate offer_id
+        offer_id = f"O-{uuid.uuid4()[:6].upper()}"
 
-        # Complete offer dict
-        offer = {
-            'offer_id': offer_id,
-            'agency_tax_id': offer_data['agency_tax_id'],
-            'agency_name': agency['company_name'],
-            'type': offer_data['type'],
-            'title': offer_data['title'],
-            'price': offer_data['price'],
-            'currency': offer_data.get('currency', 'DT'),
-            'from_city': offer_data.get('from_city', ''),
-            'to_city': offer_data.get('to_city', ''),
-            'depart_date': offer_data.get('depart_date', ''),
-            'return_date': offer_data.get('return_date', ''),
-            'seats_available': offer_data.get('seats_available'),
-            'description': offer_data.get('description', ''),
-            'created_at': datetime.utcnow().isoformat()
-        }
+        offer = Offer(
+            offer_id=offer_id,
+            agency_id=offer_data['agency_id'],
+            type=offer_data['type'],
+            title=offer_data['title'],
+            price=offer_data['price'],
+            currency=offer_data.get('currency', 'TND'),
+            from_city=offer_data.get('from_city'),
+            to_city=offer_data.get('to_city'),
+            date_from=offer_data.get('date_from'),
+            date_to=offer_data.get('date_to'),
+            seats_available=offer_data.get('seats_available'),
+            segment=offer_data.get('segment'),
+            pilgrimage_type=offer_data.get('pilgrimage_type'),
+            domestic=offer_data.get('domestic', False),
+            capacity=offer_data.get('capacity'),
+            tags=offer_data.get('tags'),
+            description=offer_data.get('description')
+        )
 
-        offers.append(offer)
-        OfferService.save_csv(offers)
-        return offer
-
-    @staticmethod
-    def get_offers(filters=None):
-        offers = OfferService.load_csv()
-        if filters:
-            # from_city, type=flight, price_lt=300
-            if 'from_city' in filters:
-                offers = [o for o in offers if o.get('from_city') == filters['from_city']]
-            if 'type' in filters:
-                offers = [o for o in offers if o.get('type') == filters['type']]
-            if 'price_lt' in filters:
-                offers = [o for o in offers if o.get('price', 0) < float(filters['price_lt'])]
-        return sorted(offers, key=lambda x: x['price'])
+        db.session.add(offer)
+        db.session.commit()
+        return offer.to_dict()
 
     @staticmethod
     def get_offer(offer_id):
-        for o in OfferService.load_csv():
-            if o['offer_id'] == offer_id:
-                return o
-        raise ValueError("Not found")
+        offer = Offer.query.filter_by(offer_id=offer_id).first()
+        if not offer:
+            abort(404, "Offer not found")
+        return offer.to_dict()
 
     @staticmethod
     def update_offer(offer_id, data):
-        offers = OfferService.load_csv()
-        for o in offers:
-            if o['offer_id'] == offer_id:
-                o.update(data)
-                OfferService.save_csv(offers)
-                return o
-        raise ValueError("Not found")
+        offer = Offer.query.filter_by(offer_id=offer_id).first()
+        if not offer:
+            abort(404, "Offer not found")
+
+        for key, value in data.items():
+            if hasattr(offer, key):
+                setattr(offer, key, value)
+
+        db.session.commit()
+        return offer.to_dict()
 
     @staticmethod
     def delete_offer(offer_id):
-        offers = [o for o in OfferService.load_csv() if o['offer_id'] != offer_id]
-        OfferService.save_csv(offers)
+        offer = Offer.query.filter_by(offer_id=offer_id).first()
+        if not offer:
+            abort(404, "Offer not found")
+
+        db.session.delete(offer)
+        db.session.commit()
+
+    @staticmethod
+    def seed_sample_data():
+        """Seed sample data if offers table is empty"""
+        if Offer.query.count() > 0:
+            return
+
+        sample_offers = [
+            {
+                "offer_id": "O-000001",
+                "type": "pilgrimage",
+                "pilgrimage_type": "umrah",
+                "from_city": "TUN",
+                "to_city": "JED",
+                "domestic": False,
+                "title": "Umrah Gold 10D",
+                "description": "Mecca+Medina 4*",
+                "price": 3500,
+                "currency": "TND",
+                "date_from": "2026-02-10",
+                "date_to": "2026-02-20",
+                "agency_id": "TUN-123456",
+                "capacity": 50,
+                "tags": '["vip", "luxury"]'
+            },
+            {
+                "offer_id": "O-000002",
+                "type": "flight",
+                "segment": "business",
+                "from_city": "TUN",
+                "to_city": "DJR",
+                "domestic": True,
+                "title": "Business TUN-DJR",
+                "price": 450,
+                "agency_id": "TUN-789012",
+                "capacity": 100,
+                "tags": '["business"]'
+            },
+            {
+                "offer_id": "O-000003",
+                "type": "hotel",
+                "domestic": True,
+                "to_city": "SFA",
+                "title": "Sfax 4* Hotel",
+                "price": 250,
+                "agency_id": "TUN-345678",
+                "capacity": 200,
+                "tags": '["family"]'
+            }
+        ]
+
+        for offer_data in sample_offers:
+            # Convert date strings to date objects
+            if 'date_from' in offer_data and offer_data['date_from']:
+                offer_data['date_from'] = date.fromisoformat(offer_data['date_from'])
+            if 'date_to' in offer_data and offer_data['date_to']:
+                offer_data['date_to'] = date.fromisoformat(offer_data['date_to'])
+            offer = Offer.from_dict(offer_data)
+            db.session.add(offer)
+
+        db.session.commit()
+        print("Sample offers seeded!")
