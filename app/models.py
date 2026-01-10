@@ -141,6 +141,48 @@ class Offer(db.Model):
         return f'<Offer {self.offer_id} ({self.title})>'
 
 
+class Review(db.Model):
+    """Customer Review Model"""
+
+    __tablename__ = 'reviews'
+
+    id = db.Column(db.Integer, primary_key=True)
+    review_id = db.Column(db.String(20), unique=True, nullable=False, index=True)
+    agency_id = db.Column(db.String(20), db.ForeignKey('agencies.tax_id'), nullable=False, index=True)
+    customer_name = db.Column(db.String(100), nullable=False)
+    customer_email = db.Column(db.String(120), nullable=False)
+    rating = db.Column(db.Integer, nullable=False)  # 1-5 ⭐
+    comment = db.Column(db.Text)
+    status = db.Column(db.String(20), default='pending', index=True)  # pending, approved, rejected
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Relationship
+    agency = db.relationship('Agency', backref=db.backref('reviews', lazy=True))
+
+    def to_dict(self):
+        """JSON serialization"""
+        return {
+            'id': self.id,
+            'review_id': self.review_id,
+            'agency_id': self.agency_id,
+            'agency_name': self.agency.company_name if self.agency else None,
+            'customer_name': self.customer_name,
+            'customer_email': self.customer_email,
+            'rating': self.rating,
+            'comment': self.comment,
+            'status': self.status,
+            'created_at': self.created_at.isoformat() if self.created_at else None
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        """Create from dict (POST)"""
+        return cls(**data)
+
+    def __repr__(self):
+        return f'<Review {self.review_id} ({self.customer_name})>'
+
+
 class PendingAgency(db.Model):
     """Pending Agency Registration Model"""
 

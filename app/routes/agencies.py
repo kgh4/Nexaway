@@ -95,11 +95,16 @@ def get_agency_stats():
     total = len(agencies)
     avg_trust = sum(float(a.get('trust_score', 50)) for a in agencies) / total if total > 0 else 0
 
+    # Get top-rated agencies
+    top_rated_limit = request.args.get('top_rated_limit', 5, type=int)
+    top_rated_agencies = AgencyService.get_agencies_sorted_by_trust()[:top_rated_limit]
+
     return {
         'stats': stats,
         'total': total,
         'avg_trust': round(avg_trust, 1),
-        'top_governorate': max(stats.items(), key=lambda x: x[1], default=('None', 0))
+        'top_governorate': max(stats.items(), key=lambda x: x[1], default=('None', 0)),
+        'highest_rated_agencies': top_rated_agencies
     }
 
 
@@ -278,6 +283,34 @@ def reject_pending_agency(pending_id):
     )
 
     return {"status": "rejected"}, 200
+
+@agencies_bp.route('/agencies/top-rated', methods=['GET'])
+def get_top_rated_agencies():
+    """Get top-rated agencies (by trust score)"""
+    limit = request.args.get('limit', 10, type=int)
+
+    agencies = AgencyService.get_agencies_sorted_by_trust()[:limit]
+
+    return {
+        'data': agencies,
+        'total': len(agencies),
+        'message': 'Trusted by us, Rated by clients!'
+    }
+
+@agencies_bp.route('/agencies/top-rated/governorate/<governorate>', methods=['GET'])
+def get_top_rated_agencies_by_governorate(governorate):
+    """Get top-rated agencies in a specific governorate"""
+    limit = request.args.get('limit', 10, type=int)
+
+    agencies = AgencyService.get_agencies_sorted_by_trust()
+    filtered = [a for a in agencies if a.get('governorate', '').lower() == governorate.lower()][:limit]
+
+    return {
+        'data': filtered,
+        'total': len(filtered),
+        'governorate': governorate,
+        'message': 'Trusted by us, Rated by clients!'
+    }
 
 @agencies_bp.route('/debug/routes', methods=['GET'])
 def debug_routes():
