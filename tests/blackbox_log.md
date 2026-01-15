@@ -166,3 +166,24 @@ OUTPUT ONLY:
 4. Test POST JSON example
 
 Goal: POST {"tax_id": "1170952L"} → API searches Tunisian registry LIVE → ✅ or ❌
+**Authorization prompt** 
+You are my Flask API expert. Add these 5 endpoints to app.py:
+
+1. POST /v1/auth/admin/login
+2. POST /v1/auth/agency/login  
+3. POST /v1/auth/agency/register
+4. POST /v1/auth/client/login
+5. POST /v1/auth/client/register
+
+Requirements:
+✅ JWT tokens (pip install flask-jwt-extended)
+✅ Roles: admin/agency/client
+✅ Admin: admin@nexaway.tn / admin123
+✅ Agency: email + agency_id (A-xxx)
+✅ Client: email only
+✅ Return: {"access_token": "...", "role": "agency"}
+
+Test with:
+curl -X POST http://127.0.0.1:8000/v1/auth/admin/login -d '{"email":"admin@nexaway.tn","password":"admin123"}'
+
+Add CORS + existing routes stay!

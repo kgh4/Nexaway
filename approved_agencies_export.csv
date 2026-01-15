@@ -1,0 +1,48 @@
+agency_id,tax_id,company_name,official_name,category,email,phone,governorate,trust_score,status,created_at,updated_at
+,5259437B,Carthage Travel & Events,Carthage Travel & Events SARL,,contact@cte.tn,+216 71 860 015,Ariana,50,approved,2026-01-15T20:31:08.998752,2026-01-15T20:31:08.998755
+,1170952L,Carthage Travel & Events - Tunis,Carthage Travel & Events - Tunis SARL,,tunis@cte.tn,+216 29 260 260,Tunis,50,approved,2026-01-15T20:31:09.000989,2026-01-15T20:31:09.000991
+,4484106Z,Carthage Travel & Events - Hammamet,Carthage Travel & Events - Hammamet SARL,,hammamet@cte.tn,+216 72 283 606,Hammamet,50,approved,2026-01-15T20:31:09.001604,2026-01-15T20:31:09.001606
+,2976245B,Carthage Travel & Events - Sousse,Carthage Travel & Events - Sousse SARL,,sousse@cte.tn,+216 73 277 702,Sousse,50,approved,2026-01-15T20:31:09.002243,2026-01-15T20:31:09.002245
+,4011459P,Carthage Travel & Events - Sfax,Carthage Travel & Events - Sfax SARL,,sfax@cte.tn,+216 74 211 322,Sfax,50,approved,2026-01-15T20:31:09.002776,2026-01-15T20:31:09.002778
+,4169736J,ALL SEASONS TRAVEL TUNISIA,ALL SEASONS TRAVEL TUNISIA SARL,,info@allseasons-travel.tn,+216 98 750 798,Tunis,50,approved,2026-01-15T20:31:09.003275,2026-01-15T20:31:09.003277
+,1919328E,Tulip Travel & Events,Tulip Travel & Events SARL,,contact@tulip-travel.tn,+216 26 100 540,Zarzis,50,approved,2026-01-15T20:31:09.003817,2026-01-15T20:31:09.003818
+,7430713W,Open Visa Tunisie,Open Visa Tunisie SARL,,info@openvisa.tn,+216 55 492 909,Tunis,50,approved,2026-01-15T20:31:09.004303,2026-01-15T20:31:09.004305
+,3440237A,EXTRA VIRGIN TRAVEL,EXTRA VIRGIN TRAVEL SARL,,contact@extravirgintravel.tn,+216 97 777 555,Sfax,50,approved,2026-01-15T20:31:09.004768,2026-01-15T20:31:09.004770
+,5356193Z,WTH Booking,WTH Booking SARL,,booking@wth.tn,+216 72 261 826,Hammamet,50,approved,2026-01-15T20:31:09.005260,2026-01-15T20:31:09.005262
+,2435897B,Skyway Travel & Events,Skyway Travel & Events SARL,,info@skyway-travel.tn,+216 70 683 944,Ariana,50,approved,2026-01-15T20:31:09.005757,2026-01-15T20:31:09.005759
+,5104541U,Evencia Travel & Event Management,Evencia Travel & Event Management SARL,,contact@evencia.tn,+216 71 268 100,Tunis,50,approved,2026-01-15T20:31:09.006256,2026-01-15T20:31:09.006258
+,4830343T,Fortuna Travel Tunisia,Fortuna Travel Tunisia SARL,,info@fortuna-travel.tn,+216 55 885 255,Tunis,50,approved,2026-01-15T20:31:09.006749,2026-01-15T20:31:09.006751
+,1538746Q,New Look Travel,New Look Travel SARL,,contact@newlook-travel.tn,+216 71 295 759,Tunis,50,approved,2026-01-15T20:31:09.007264,2026-01-15T20:31:09.007267
+,6845056T,TWS Agence de Voyages,TWS Agence de Voyages SARL,,reservations@tws-travel.tn,+216 72 226 669,Monastir,50,approved,2026-01-15T20:31:09.007867,2026-01-15T20:31:09.007869
+,9384744M,Ulysse Voyages,Ulysse Voyages SARL,,contact@ulysse-voyages.tn,+216 75 621 909,Djerba,50,approved,2026-01-15T20:31:09.008370,2026-01-15T20:31:09.008371
+,2505264S,Tunisie Randonnées,Tunisie Randonnées SARL,,info@tunisie-randonnees.tn,+216 26 245 082,Kebili,50,approved,2026-01-15T20:31:09.008835,2026-01-15T20:31:09.008837
+,2913000N,Capitol Travel,Capitol Travel SARL,,booking@capitol-travel.tn,+216 98 318 782,Hammamet,50,approved,2026-01-15T20:31:09.009301,2026-01-15T20:31:09.009303
+,4395462P,Tunivoyage,Tunivoyage SARL,,info@tunivoyage.tn,+216 21 280 051,Tunis,50,approved,2026-01-15T20:31:09.009805,2026-01-15T20:31:09.009807
+,7966731R,Didon Tours,Didon Tours SARL,,contact@didontours.com,+216 71 330 000,Tunis,50,approved,2026-01-15T20:31:09.010283,2026-01-15T20:31:09.010285
+,5440355G,Jektis Travel,Jektis Travel SARL,,contact@jektistravel.com,+216 71 706 900,Ariana,50,approved,2026-01-15T20:31:09.010766,2026-01-15T20:31:09.010768
+,8129747L,Traveltodo,Traveltodo SARL,,info@traveltodo.com,+216 71 500 000,Tunis,50,approved,2026-01-15T20:31:09.011281,2026-01-15T20:31:09.011283
+,4992141Q,Green Trek Tunisia,Green Trek Tunisia SARL,,info@greentrek.tn,+216 98 500 123,Tunis,50,approved,2026-01-15T20:31:09.011818,2026-01-15T20:31:09.011820
+,9529992T,Skyways Adventures,Skyways Adventures SARL,,contact@skyways-adventures.tn,+216 76 450 000,Tozeur,50,approved,2026-01-15T20:31:09.012320,2026-01-15T20:31:09.012322
+,3695851C,Tabaani Travel,Tabaani Travel SARL,,hello@tabaani.co,+216 55 123 456,Tunis,50,approved,2026-01-15T20:31:09.012799,2026-01-15T20:31:09.012801
+,8016423H,Etnafes Eco Tourism,Etnafes Eco Tourism SARL,,contact@etnafes.tn,+216 98 765 432,Tunis,50,approved,2026-01-15T20:31:09.013270,2026-01-15T20:31:09.013272
+,4941736J,El Baraka Travel,El Baraka Travel SARL,,info@elbaraka-travel.tn,+216 71 456 789,Tunis,50,approved,2026-01-15T20:31:09.013782,2026-01-15T20:31:09.013783
+,5862685C,Omra Plus,Omra Plus SARL,,reservations@omraplus.tn,+216 71 234 567,Tunis,50,approved,2026-01-15T20:31:09.014261,2026-01-15T20:31:09.014263
+,6712535F,Pilgrimage Tours Tunisia,Pilgrimage Tours Tunisia SARL,,contact@pilgrimage-tunisia.tn,+216 73 555 666,Sousse,50,approved,2026-01-15T20:31:09.014741,2026-01-15T20:31:09.014742
+,4639720N,Al Amal Travel,Al Amal Travel SARL,,info@alamal-travel.tn,+216 74 888 999,Sfax,50,approved,2026-01-15T20:31:09.015246,2026-01-15T20:31:09.015248
+,3195424L,Corporate Travel Solutions,Corporate Travel Solutions SARL,,corporate@cts-tunisia.tn,+216 71 123 000,Tunis,50,approved,2026-01-15T20:31:09.015719,2026-01-15T20:31:09.015720
+,7947185Q,Tunisia Business Travel,Tunisia Business Travel SARL,,sales@tbt.tn,+216 71 987 654,Tunis,50,approved,2026-01-15T20:31:09.016199,2026-01-15T20:31:09.016201
+,6059305C,Express Corporate Travel,Express Corporate Travel SARL,,bookings@express-corporate.tn,+216 71 555 888,Tunis,50,approved,2026-01-15T20:31:09.016716,2026-01-15T20:31:09.016718
+,7501811M,BizTravel Tunisia,BizTravel Tunisia SARL,,info@biztravel.tn,+216 71 222 333,Tunis,50,approved,2026-01-15T20:31:09.017211,2026-01-15T20:31:09.017213
+,9589734E,Sahara Tours Djerba,Sahara Tours Djerba SARL,,contact@sahara-djerba.tn,+216 75 654 321,Djerba,50,approved,2026-01-15T20:31:09.017682,2026-01-15T20:31:09.017684
+,5138364H,Nabeul Voyages,Nabeul Voyages SARL,,info@nabeul-voyages.tn,+216 72 789 012,Nabeul,50,approved,2026-01-15T20:31:09.018290,2026-01-15T20:31:09.018292
+,8512847T,Kairouan Travel Services,Kairouan Travel Services SARL,,contact@kairouan-travel.tn,+216 77 333 444,Kairouan,50,approved,2026-01-15T20:31:09.018930,2026-01-15T20:31:09.018932
+,6036468E,Bizerte Travel Agency,Bizerte Travel Agency SARL,,info@bizerte-travel.tn,+216 72 111 222,Bizerte,50,approved,2026-01-15T20:31:09.019620,2026-01-15T20:31:09.019622
+,5173203A,Gabes Tours,Gabes Tours SARL,,reservations@gabes-tours.tn,+216 75 444 555,Gabes,50,approved,2026-01-15T20:31:09.020116,2026-01-15T20:31:09.020118
+,9598440F,Mahdia Voyages,Mahdia Voyages SARL,,contact@mahdia-voyages.tn,+216 73 666 777,Mahdia,50,approved,2026-01-15T20:31:09.020612,2026-01-15T20:31:09.020615
+,5984180Z,Beja Travel,Beja Travel SARL,,info@beja-travel.tn,+216 78 888 999,Beja,50,approved,2026-01-15T20:31:09.021110,2026-01-15T20:31:09.021112
+,01616343A,ABC Travel SARL,,,info@abc.tn,+21698234567,Tunis,50,approved,2026-01-15T20:31:09.021595,2026-01-15T20:31:09.021598
+,12345678A,Test Agency SARL,,,test@test.tn,+21671234567,Tunis,50,approved,2026-01-15T20:31:09.022076,2026-01-15T20:31:09.022079
+,02345678B,Elite Tours SARL,,,elite@tn.com,+21698234567,Ariana,50,approved,2026-01-15T20:31:09.022567,2026-01-15T20:31:09.022569
+,09052852B,CARTHAGE TRAVELS SARL,,,contact@carthagetravels.com,+21671123456,Tunis,50,approved,2026-01-15T20:31:09.023042,2026-01-15T20:31:09.023044
+,12345678,TEST AGENCY SARL,,,test@test.tn,+21651234567,Tunis,50,approved,2026-01-15T20:31:09.023743,2026-01-15T20:31:09.023745
+,002412B,GLOBAL LIGHTING SARL,,,global.lighting@gnet.tn,+216 77 302 625,Tunis,50,approved,2026-01-15T20:31:09.024475,2026-01-15T20:31:09.024477

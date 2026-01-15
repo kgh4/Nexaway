@@ -6,3 +6,6 @@ selenium==4.15.2
 webdriver-manager==4.0.1
 flask-caching==2.1.0
 playwright==1.40.0
+flask-jwt-extended==4.6.0
+flask-cors==4.0.0
+flask-bcrypt==1.0.1

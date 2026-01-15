@@ -1,8 +1,13 @@
-# TODO: Add governorate and address as required fields to /agencies/register endpoint
+# RNE NORMALIZER Implementation
 
 ## Tasks
-- [x] Extract governorate and address from form data in register_agency function
-- [x] Update required fields validation to include governorate and address
-- [x] Set governorate and address when creating PendingAgency record
-- [x] Update debug prints to include new fields
-- [ ] Test the endpoint to ensure changes work correctly
+- [x] Update app/models.py: Change CheckConstraint to '^[0-9]{8}[A-Z]$'
+- [x] Create alembic migration to normalize existing tax_ids (remove dashes, uppercase)
+- [x] Update seed_agencies.py: Remove dashes from tax_id in test_agencies
+- [x] Update app/routes/reviews.py: Normalize input by removing dashes and uppercasing, validate as 8 digits + 1 letter
+- [x] Update app/routes/agencies.py: Update validate_rne_format to match new format (8 digits + 1 letter, no dash)
+
+## Followup Steps
+- [ ] Run python migrate_rne_tax_id.py
+- [ ] Test with Insomnia using both formats
+- [ ] Run bulk update CLI if needed

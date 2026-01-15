@@ -1,6 +1,6 @@
 import csv
 from app import create_app, db
-from app.models import Agency, PendingAgency, Review
+from app.models import Agency, Review
 from app.services.offer_service import OfferService
 
 # Create app context
@@ -26,7 +26,6 @@ with open('data/tunisia_agencies_real_dataset.csv', 'r', encoding='utf-8') as f:
             governorate=row.get('governorate', ''),
             email=row.get('email', ''),
             phone=row.get('phone', ''),
-            trust_score=int(row.get('trust_score', 50)),
             status='active',
             source='csv'
         )
@@ -37,6 +36,15 @@ print("✅ Agencies loaded!")
 
 # Seed sample offers
 OfferService.seed_sample_data()
+
+# Seed admin user
+from app.models import User
+if not User.query.filter_by(email='admin@nexaway.tn').first():
+    admin = User(email='admin@nexaway.tn', role='admin')
+    admin.set_password('admin123')
+    db.session.add(admin)
+    db.session.commit()
+    print("✅ Admin user created: admin@nexaway.tn / admin123")
 
 print("✅ Database created! instance/nexaway.db")
 print("✅ Run: python run.py")

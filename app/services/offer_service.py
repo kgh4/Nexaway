@@ -156,6 +156,7 @@ class OfferService:
                 "to_city": "SFA",
                 "title": "Sfax 4* Hotel",
                 "price": 250,
+                "currency": "TND",
                 "agency_id": "TUN-345678",
                 "capacity": 200,
                 "tags": '["family"]'
