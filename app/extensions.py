@@ -7,7 +7,14 @@ from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 
 db = SQLAlchemy()
-api = Api()
+api = Api(
+    version='1.0',
+    title='Nexaway API',
+    description='Tunisian Diaspora Trust & Relocation Platform',
+    doc='/swagger',
+    prefix='',
+    ordered=True
+)
 limiter = Limiter(key_func=get_remote_address)
 jwt = JWTManager()
 bcrypt = Bcrypt()

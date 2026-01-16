@@ -5,7 +5,10 @@ class Config(object):
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or 'nexaway-jwt-secret-2025'
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///nexaway.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    
+    # Flask-RESTX Configuration
     RESTX_MASK_SWAGGER = False
+    JSON_SORT_KEYS = False
 
 class DevelopmentConfig(Config):
     DEBUG = True

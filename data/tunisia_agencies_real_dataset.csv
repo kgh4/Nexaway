@@ -46,3 +46,4 @@ tax_id,company_name,official_name,governorate,email,phone,phone_valid,trust_scor
 09052852B,CARTHAGE TRAVELS SARL,,Tunis,contact@carthagetravels.com,+21671123456,True,27,true,Valid phone (+25); Suspicious email domain (-15); Legitimate company name (+30); Valid Tunisian governorate (+15); Invalid tax ID format,2026-01-03T13:01:29.153875Z
 12345678,TEST AGENCY SARL,,Tunis,test@test.tn,+21651234567,True,69,false,Valid phone (+25); Valid email domain (+20); Legitimate company name (+30); Valid Tunisian governorate (+15); Invalid tax ID format,2026-01-05T16:10:40.008276Z
 002412B,GLOBAL LIGHTING SARL,,Tunis,global.lighting@gnet.tn,+216 77 302 625,True,50,false,Valid phone (+25); .tn email (+10); SARL (+15),2026-01-15T22:29:53.301364
+12345678Z,Test Agency,,Tunis,test@example.com,+21650000000,True,65,false,Valid phone (+25); Valid email (+10); Travel keyword (+20); Valid tax_id (+10),2026-01-16T18:28:56.688275Z

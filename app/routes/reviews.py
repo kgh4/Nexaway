@@ -26,10 +26,10 @@ def create_review():
     if not norm_tax:
         return {"error": "agency_tax_id is required"}, 400
 
-    # VALIDATE NORMALIZED FORMAT: 8DIGITS+1LETTER
-    if not re.match(r'^[0-9]{8}[A-Z]$', norm_tax):
+    # VALIDATE NORMALIZED FORMAT: 7-8 DIGITS + 1 LETTER (Tunisian RNE)
+    if not re.match(r'^[0-9]{7,8}[A-Z]$', norm_tax):
         return jsonify({
-            "error": f"Invalid RNE: 8 digits + 1 letter\nGot: '{raw_tax}'\nNorm: '{norm_tax}'"
+            "error": f"Invalid RNE: 7-8 digits + 1 letter\nGot: '{raw_tax}'\nNorm: '{norm_tax}'"
         }), 400
 
     # LOOKUP BY NORMALIZED TAX_ID
